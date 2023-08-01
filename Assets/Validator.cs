@@ -37,6 +37,7 @@ public class Validator : MonoBehaviour
         if (ActiveKnitRow.GetKnitData().KnitColor == ActiveKnitRow.GetKnitData().KnitColor)
         {
             //knit here
+            return;
             
         }
             
