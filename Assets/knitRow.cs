@@ -6,7 +6,8 @@ using DG.Tweening;
 
 public class knitRow : MonoBehaviour
 {
-    
+    [SerializeField] bool IsColorActive = false;
+    [SerializeField] GameObject _node;
     [SerializeField] List<Transform> KnitPositions;
     [SerializeField] Color KnitRowColor=Color.white;
     [SerializeField] float Delay = 0.1f;
@@ -16,12 +17,16 @@ public class knitRow : MonoBehaviour
     [SerializeField] int WobbleAFterNode = 20;
     Validator m_Validator;
     List<Transform> KnitNodes;
+    List<GameObject> BakedNodes=new List<GameObject>();
     Data KnitData = new Data();
+    bool IsInteractable = false;
     void Start()
     {
         m_Validator = GetComponentInParent<Validator>();
         KnitData.KnitColor = KnitRowColor;
-        m_Validator.AddKnitRow(this, KnitData);
+        m_Validator.AddKnitRowAtStart(this, KnitData);
+        if(IsColorActive)
+        BakeNodes();
     }
 
     // Update is called once per frame
@@ -31,6 +36,7 @@ public class knitRow : MonoBehaviour
     }
     public void AlignNodes(List<Transform> KnitNodes)
     {
+        if (!IsInteractable) return;
         StartCoroutine(pause(Delay,KnitNodes));
     }
     void SendNodeToPos(Transform KnitNode, Vector3 Pos)
@@ -39,6 +45,7 @@ public class knitRow : MonoBehaviour
     }
     IEnumerator pause(float pausetime, List<Transform> KnitNodes)
     {
+        IsInteractable = false;
         int knitindex = 0;
         List<Transform> Wobblenodes = new List<Transform>();
         foreach (Transform item in KnitPositions)
@@ -57,6 +64,7 @@ public class knitRow : MonoBehaviour
             }
 
         }
+        IsInteractable = true;
         Debug.Log("Transferred");
 
     }
@@ -79,5 +87,25 @@ public class knitRow : MonoBehaviour
     public Data GetKnitData()
     {
         return KnitData;
+    }
+    void BakeNodes()
+    {
+        int NodeCount = KnitPositions.Count;
+        for (int i = 0; i < NodeCount; i++)
+        {
+            GameObject obj = Instantiate(_node);
+            obj.SetActive(false);
+            BakedNodes.Add(obj);
+        }
+        BakeNodesAtStart();
+    }
+    void BakeNodesAtStart()
+    {
+        for (int i = 0; i < KnitPositions.Count; i++)
+        {
+            BakedNodes[i].transform.position = KnitPositions[i].transform.position;
+            BakedNodes[i].GetComponent<MeshRenderer>().material.color = KnitRowColor;
+            BakedNodes[i].SetActive(true);
+        }
     }
 }

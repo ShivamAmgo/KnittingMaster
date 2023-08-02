@@ -8,12 +8,12 @@ public class Validator : MonoBehaviour
     knitRow TopKnitRow=null;
     knitRow ActiveKnitRow;
     List<knitRow> m_ActiveKnitRows = new List<knitRow>();
-    
+    [SerializeField] int NumberOfRowsToBake=4;
     void Start()
     {
         if (m_KnitRows.Count > 0)
         { 
-            TopKnitRow = m_KnitRows[0]; 
+            TopKnitRow = m_KnitRows[3]; 
             ActiveKnitRow = m_ActiveKnitRows[m_ActiveKnitRows.Count-1];
         }
          
@@ -24,7 +24,7 @@ public class Validator : MonoBehaviour
     {
         
     }
-    public void AddKnitRow(knitRow KR,Data knitdata)
+    public void AddKnitRowAtStart(knitRow KR,Data knitdata)
     {
         if (m_ActiveKnitRows.Contains(KR))
             return;
@@ -32,14 +32,25 @@ public class Validator : MonoBehaviour
         ActiveKnitRow = m_ActiveKnitRows[m_ActiveKnitRows.Count - 1];
        
     }
-    public void Validate(knitRow Topknitrow)
+    public void Validate(knitRow knitrow)
     {
-        if (ActiveKnitRow.GetKnitData().KnitColor == ActiveKnitRow.GetKnitData().KnitColor)
+        if (knitrow.GetKnitData().KnitColor == ActiveKnitRow.GetKnitData().KnitColor)
         {
-            //knit here
-            return;
-            
+
+                        
         }
             
+    }
+    void PlaceRowOnTop(knitRow KR)
+    { 
+        //if(TopKnitRow)
+    }
+    void Bake(int rowcount)
+    {
+        if (rowcount <= 0) return;
+        for (int i = 0; i < rowcount; i++)
+        {
+            //m_KnitRows[i].AlignNodes()
+        }
     }
 }
