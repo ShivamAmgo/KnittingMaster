@@ -17,16 +17,19 @@ public class knitRow : MonoBehaviour
     [SerializeField] int WobbleAFterNode = 20;
     Validator m_Validator;
     List<Transform> KnitNodes;
-    List<GameObject> BakedNodes=new List<GameObject>();
+    List<Transform> BakedNodes = new List<Transform>();
     Data KnitData = new Data();
     bool IsInteractable = false;
     void Start()
     {
         m_Validator = GetComponentInParent<Validator>();
         KnitData.KnitColor = KnitRowColor;
-        m_Validator.AddKnitRowAtStart(this, KnitData);
-        if(IsColorActive)
-        BakeNodes();
+        if (IsColorActive)
+        {
+            m_Validator.AddKnitRowAtStart(this, KnitData);
+            BakeNodes(); 
+        }
+        
     }
 
     // Update is called once per frame
@@ -37,13 +40,14 @@ public class knitRow : MonoBehaviour
     public void AlignNodes(List<Transform> KnitNodes)
     {
         if (!IsInteractable) return;
-        StartCoroutine(pause(Delay,KnitNodes));
+        StartCoroutine(Align(Delay,KnitNodes));
+        
     }
     void SendNodeToPos(Transform KnitNode, Vector3 Pos)
     {
         KnitNode.DOMove(Pos, Duration).SetEase(Ease.Linear);
     }
-    IEnumerator pause(float pausetime, List<Transform> KnitNodes)
+    IEnumerator Align(float pausetime, List<Transform> KnitNodes)
     {
         IsInteractable = false;
         int knitindex = 0;
@@ -95,8 +99,9 @@ public class knitRow : MonoBehaviour
         {
             GameObject obj = Instantiate(_node);
             obj.SetActive(false);
-            BakedNodes.Add(obj);
+            BakedNodes.Add(obj.transform);
         }
+        KnitData.KnitNodes = BakedNodes;
         BakeNodesAtStart();
     }
     void BakeNodesAtStart()
@@ -105,7 +110,7 @@ public class knitRow : MonoBehaviour
         {
             BakedNodes[i].transform.position = KnitPositions[i].transform.position;
             BakedNodes[i].GetComponent<MeshRenderer>().material.color = KnitRowColor;
-            BakedNodes[i].SetActive(true);
+            BakedNodes[i].gameObject.SetActive(true);
         }
     }
 }
