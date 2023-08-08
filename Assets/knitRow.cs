@@ -19,7 +19,7 @@ public class knitRow : MonoBehaviour
     List<Transform> KnitNodes;
     List<Transform> BakedNodes = new List<Transform>();
     Data KnitData = new Data();
-    bool IsInteractable = false;
+    bool IsInteractable = true;
     void Start()
     {
         m_Validator = GetComponentInParent<Validator>();
@@ -27,7 +27,8 @@ public class knitRow : MonoBehaviour
         if (IsColorActive)
         {
             m_Validator.AddKnitRowAtStart(this, KnitData);
-            BakeNodes(); 
+            BakeNodes();
+            Debug.Log(KnitRowColor + " " + transform.root.name);
         }
         
     }
@@ -40,6 +41,7 @@ public class knitRow : MonoBehaviour
     public void AlignNodes(List<Transform> KnitNodes)
     {
         if (!IsInteractable) return;
+        Debug.Log("Aligning");
         StartCoroutine(Align(Delay,KnitNodes));
         
     }

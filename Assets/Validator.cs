@@ -14,8 +14,8 @@ public class Validator : MonoBehaviour
     {
         if (m_KnitRows.Count > 0)
         { 
-            TopKnitRow = m_KnitRows[3]; 
-            //ActiveKnitRow = m_ActiveKnitRows[m_ActiveKnitRows.Count-1];
+            TopKnitRow = m_KnitRows[3];
+            //ActiveKnitRow = m_KnitRows[3];
         }
          
     }
@@ -37,18 +37,32 @@ public class Validator : MonoBehaviour
     public void Validate(knitRow knitrow)
     {
         if (m_ActiveKnitRows.IndexOf(ActiveKnitRow) >= 3) return;
+        Debug.Log("Validating");
+            
+        if(knitrow == null)
+        {
+            PlaceRowOnTop(knitrow);
+            return;
+        }
         if (knitrow.GetKnitData().KnitColor == ActiveKnitRow.GetKnitData().KnitColor)
         {
-            PlaceRowOnTop(knitrow);            
+            PlaceRowOnTop(knitrow);
+            //Debug.Log("PLAcing on top");
+
+        }
+        else
+        {
+            Debug.Log("not the right color"+ knitrow.GetKnitData().KnitColor+" != "+ ActiveKnitRow.GetKnitData().KnitColor);
         }
             
     }
     void PlaceRowOnTop(knitRow KR)
     {
-        m_KnitRows[m_KnitRows.IndexOf(ActiveKnitRow) + 1].AlignNodes(KR.GetKnitData().KnitNodes);
+        m_KnitRows[m_KnitRows.IndexOf(ActiveKnitRow)-1].AlignNodes(KR.GetKnitData().KnitNodes);
         ActiveKnitRow = KR;
         m_ActiveKnitRows.Add(KR);
-       
+        KR.transform.root.GetComponent<Validator>().RemoveKnitRow(KR);
+        Debug.Log("Placing");
     }
     void Bake(int rowcount)
     {
@@ -67,5 +81,9 @@ public class Validator : MonoBehaviour
         m_ActiveKnitRows.Remove(KR);
         //update activeknitrow after removing
         //ActiveKnitRow=
+        if (m_ActiveKnitRows.Count > 0)
+            ActiveKnitRow = m_ActiveKnitRows[m_ActiveKnitRows.Count - 1];
+        else
+            ActiveKnitRow = null;
     }
 }

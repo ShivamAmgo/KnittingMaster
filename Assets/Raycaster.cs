@@ -25,14 +25,16 @@ public class Raycaster : MonoBehaviour
                 if (hit.collider != null && hit.collider.CompareTag("Item"))
                 {
                     Validator VM = hit.transform.GetComponent<Validator>();
+                    Debug.Log("Active Validator is " + ActiveItemValidator);
                     if (ActiveItemValidator == VM) return;
                     if (ActiveItemValidator == null)
                         ActiveItemValidator = VM;
                     else
                     {
                         VM.Validate(ActiveItemValidator.GetActiveKnitRow());
+                        ActiveItemValidator = null;
                     }
-                    Debug.Log("Active Validator is " + ActiveItemValidator);
+                   // Debug.Log("Active Validator is " + ActiveItemValidator);
                 }
             }
         }

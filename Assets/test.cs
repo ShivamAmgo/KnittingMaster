@@ -16,7 +16,7 @@ public class test : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            KR.AlignNodes(knitNodesObj);
+            //KR.AlignNodes(knitNodesObj);
         }
     }
 
